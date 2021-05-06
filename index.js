@@ -8,8 +8,6 @@ const login = require('./api/login.js');
 const logout = require('./api/logout.js');
 const forum = require('./api/forums.js');
 
-const User = require('./models/User.js');
-
 require('dotenv').config();
 const { PORT, MONGO_URI } = process.env;
 
@@ -37,7 +35,10 @@ app.use(
 app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
+
+const User = require('./models/User.js');
 passport.use(new LocalStrategy(User.authenticate()));
+
 passport.serializeUser(User.serializeUser());
 passport.serializeUser(User.deserializeUser());
 

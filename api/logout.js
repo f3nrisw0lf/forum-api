@@ -4,7 +4,7 @@ const router = express.Router();
 
 const User = require('../models/User.js');
 
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
 	const response = req.logout();
 	res.json(response);
 });
