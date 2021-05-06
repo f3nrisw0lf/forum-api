@@ -42,27 +42,31 @@ router.post('/:forum', async (req, res) => {
 
 // Get Comments based on Post ID
 router.get('/:forum/:postId', async (req, res) => {
-	const { forum, postId } = req.params;
+	const { postId } = req.params;
 	const query = await Comment.find({ parentCommentId: postId });
 	res.json(query);
 });
 
 // Insert Comment based on Post ID
 router.post('/:forum/:postId', async (req, res) => {
-	const { forum, postId } = req.params;
+	const { postId } = req.params;
 	const { nameId, content } = req.body;
 
 	const comment = {
 		nameId: nameId,
 		content: content,
-		parentCommentId: postId,
+		postId: postId,
+		parentCommentId: null,
 		date: new Date(),
 	};
 
-	const query = new Comment(comment);
-	res.json(query);
-	const savedQuery = await query.save();
-	res.json(savedQuery);
+	try {
+		const query = new Comment(comment);
+		const savedQuery = await query.save();
+		res.json(savedQuery);
+	} catch (error) {
+		res.json(error);
+	}
 });
 
 // Insert Forum
