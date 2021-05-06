@@ -1,10 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 const signup = require('./api/signup.js');
 const login = require('./api/login.js');
+const logout = require('./api/logout.js');
 const forum = require('./api/forums.js');
+
+const User = require('./models/User.js');
 
 require('dotenv').config();
 const { PORT, MONGO_URI } = process.env;
@@ -23,18 +27,23 @@ db.once('open', () => {
 });
 
 const app = express();
+app.use(
+	require('express-session')({
+		secret: 'keyboard cat',
+		resave: false,
+		saveUninitialized: false,
+	}),
+);
 app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.get('/', (req, res) => {
-	res.json({
-		name: MONGO_URI,
-	});
-});
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.serializeUser(User.deserializeUser());
 
 app.use('/signup', signup);
 app.use('/login', login);
+app.use('/logout', logout);
 app.use('/f', forum);
 
 app.listen(PORT, () => {
