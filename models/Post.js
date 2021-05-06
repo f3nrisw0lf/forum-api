@@ -9,7 +9,6 @@ const postSchema = new Schema({
 	date: Date,
 });
 
-postSchema.set('autoIndex', true);
 const Post = mongoose.model('Post', postSchema);
 
 module.exports = Post;

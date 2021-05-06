@@ -10,7 +10,6 @@ const commentSchema = new Schema({
 	date: Date,
 });
 
-commentSchema.set('autoIndex', true);
 const Comment = mongoose.model('Comment', commentSchema);
 
 module.exports = Comment;

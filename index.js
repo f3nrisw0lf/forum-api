@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 const signup = require('./api/signup.js');
 const login = require('./api/login.js');
@@ -23,6 +24,8 @@ db.once('open', () => {
 
 const app = express();
 app.use(express.json());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', (req, res) => {
 	res.json({

@@ -5,11 +5,6 @@ const Post = require('../models/Post.js');
 const Forum = require('../models/Forum.js');
 const Comment = require('../models/Comment.js');
 
-// const getForum = async (table, req, res) => {
-// 	const query = await Forum.find(table);
-// 	res.json(await query);
-// };
-
 const insertPost = async (forum, req, res) => {
 	const { userId, content, date } = req.body;
 
@@ -18,6 +13,7 @@ const insertPost = async (forum, req, res) => {
 		userId: userId,
 		forumId: found._id,
 		content: content,
+		date: date,
 	};
 
 	const query = new Post(post);
