@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const cors = require('cors');
 const LocalStrategy = require('passport-local').Strategy;
 
 const signup = require('./api/signup.js');
@@ -33,6 +34,7 @@ app.use(
 	}),
 );
 app.use(express.json());
+app.use(cors());
 app.use(passport.initialize());
 app.use(passport.session());
 
