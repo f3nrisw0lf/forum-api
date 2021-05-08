@@ -5,67 +5,37 @@ const Post = require('../models/Post.js');
 const Forum = require('../models/Forum.js');
 const Comment = require('../models/Comment.js');
 
-const insertPost = async (forum, req, res) => {
-	const { userId, content, date } = req.body;
-
-	const found = await Forum.findOne({ name: forum });
-	const post = {
-		userId: userId,
-		forumId: found._id,
-		content: content,
-		date: date,
-	};
-
-	const query = new Post(post);
-	const savedQuery = await query.save();
-
-	res.json(savedQuery);
-};
-
-// Get Forums based on the Forum Parameter
-router.get('/:forum', async (req, res) => {
-	const { forum } = req.params;
-	const request = await Forum.findOne({ name: forum });
-	console.log(request);
-	if (request !== null) {
-		const query = await Post.find({ forumId: request._id });
-		res.json(query);
-	} else res.json('NOT FOUND');
+// Get all Forums
+router.get('/', async (req, res) => {
+	const forums = await Forum.find();
+	res.json(forums);
 });
 
-// Insert Post based on the Forum Parameter
-router.post('/:forum', async (req, res) => {
-	const { forum } = req.params;
-	insertPost(forum, req, res);
+// Get one Forums
+router.get('/:forumName', async (req, res) => {
+	const { forumName } = req.params;
+	const forums = await Forum.find({ name: forumName });
+	res.json(forums);
 });
 
-// Get Comments based on Post ID
-router.get('/:forum/:postId', async (req, res) => {
-	const { postId } = req.params;
-	const query = await Comment.find({ parentCommentId: postId });
-	res.json(query);
-});
+// Get one Forums
+router.get('/:forumName/all', async (req, res) => {
+	const { forumName } = req.params;
+	const forums = await Forum.findOne({ name: forumName });
+	const posts = await Post.find({ forumId: forums._id });
+	const comments = Promise.all(
+		posts.map((post) => {
+			const poster = await User.findOne({ _id: post.userId});
+			const commentTemp = await Comment.find({postId: post._id})
+			if(commentTemp !== null){
+				const all = commentTemp.map((element) => {
+						
+				})
+			}
 
-// Insert Comment based on Post ID
-router.post('/:forum/:postId', async (req, res) => {
-	const { postId } = req.params;
-	const { nameId, content } = req.body;
-
-	const comment = {
-		nameId: nameId,
-		content: content,
-		postId: postId,
-		parentCommentId: null,
-		date: new Date(),
-	};
-
-	try {
-		const query = new Comment(comment);
-		const savedQuery = await query.save();
-		res.json(savedQuery);
-	} catch (error) {
-		res.json(error);
-	}
+		}),
+	);
+	res.json(forums);
 });
 
 // Insert Forum

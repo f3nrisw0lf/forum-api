@@ -8,6 +8,8 @@ const signup = require('./api/signup.js');
 const login = require('./api/login.js');
 const logout = require('./api/logout.js');
 const forum = require('./api/forums.js');
+const comments = require('./api/comments.js');
+const posts = require('./api/posts.js');
 
 require('dotenv').config();
 const { PORT, MONGO_URI } = process.env;
@@ -48,6 +50,8 @@ app.use('/signup', signup);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/f', forum);
+app.use('/comments', comments);
+app.use('/posts', posts);
 
 app.listen(PORT, () => {
 	console.log(`Listening in port http://localhost:${process.env.PORT}`);
