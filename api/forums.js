@@ -27,7 +27,7 @@ router.get('/:forum', async (req, res) => {
 	const { forum } = req.params;
 	const { _id: forumId } = await Forum.findOne({ name: forum });
 	const query = await Post.find({ forumId: forumId });
-	res.json(await query);
+	res.json(query);
 });
 
 // Insert Post based on the Forum Parameter
