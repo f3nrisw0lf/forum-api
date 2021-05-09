@@ -9,7 +9,6 @@ const Forum = require('../models/Forum.js');
 router.get('/:forum', async (req, res) => {
 	const { forum } = req.params;
 	const request = await Forum.findOne({ name: forum });
-	console.log(request);
 	if (request !== null) {
 		const query = await Post.find({ forumId: request._id });
 		res.json(query);
@@ -19,15 +18,15 @@ router.get('/:forum', async (req, res) => {
 // Insert Post based on the Forum Parameter
 router.post('/:forum', async (req, res) => {
 	const { forum } = req.params;
-	const { userId, content, date } = req.body;
+	const { userId, content } = req.body;
 
 	const found = await Forum.findOne({ name: forum });
 
 	const post = {
-		userId: userId,
+		createdBy: userId,
 		forumId: found._id,
 		content: content,
-		date: date,
+		date: new Date(),
 	};
 
 	const query = new Post(post);
@@ -35,22 +34,5 @@ router.post('/:forum', async (req, res) => {
 
 	res.json(savedQuery);
 });
-
-// const insertPost = async (forum, req, res) => {
-// 	const { userId, content, date } = req.body;
-
-// 	const found = await Forum.findOne({ name: forum });
-// 	const post = {
-// 		userId: userId,
-// 		forumId: found._id,
-// 		content: content,
-// 		date: date,
-// 	};
-
-// 	const query = new Post(post);
-// 	const savedQuery = await query.save();
-
-// 	res.json(savedQuery);
-// };
 
 module.exports = router;
